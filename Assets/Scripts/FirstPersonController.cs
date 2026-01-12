@@ -7,6 +7,8 @@ public class FirstPersonController : MonoBehaviour
 {
     [Header("References")]
     public Transform cameraTransform; // arrastra la Camera (o el pivot de la cabeza) aquí
+    public GameObject cameraSwitcher;
+    CameraSwitcher cameraSwitcherScript;
 
     [Header("Movement")]
     public float walkSpeed = 5f;
@@ -24,6 +26,9 @@ public class FirstPersonController : MonoBehaviour
     public float gravity = 20f;
     public float jumpSpeed = 7f;
 
+    // [Header("Bools")]
+    // public bool useControls;
+
     CharacterController cc;
     float cameraPitch = 0f;
     float verticalVelocity = 0f;
@@ -31,7 +36,7 @@ public class FirstPersonController : MonoBehaviour
     void Start()
     {
         cc = GetComponent<CharacterController>();
-
+        cameraSwitcherScript = cameraSwitcher.GetComponent<CameraSwitcher>();
         if (cameraTransform == null)
         {
             Camera cam = GetComponentInChildren<Camera>();
@@ -44,13 +49,16 @@ public class FirstPersonController : MonoBehaviour
 
     void Update()
     {
-        HandleMouseLook();
-        HandleMovement();
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (cameraSwitcherScript.movement3d == true)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
+            HandleMouseLook();
+            HandleMovement();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+        }  
     }
 
     void HandleMouseLook()
