@@ -1,12 +1,21 @@
 using UnityEngine;
 
+
+public enum MovementType
+{
+    Movement3D,
+    Movement2D
+}
+
+
 public class CameraSwitcher : MonoBehaviour
 {
     public Camera cameraA;
     public Camera cameraB;
     public KeyCode switchKey = KeyCode.V;
-    public bool movement2d = true;
-    public bool movement3d = false;
+    // public bool movement2d = true;
+    // public bool movement3d = false;
+    public MovementType movement = MovementType.Movement2D;
     bool useA;
 
     void Start()
@@ -48,15 +57,7 @@ public class CameraSwitcher : MonoBehaviour
     }
     void ToggleControls()
     {
-        if (cameraA.enabled)
-        {
-            movement2d = true;
-            movement3d = false;
-        }
-        if (cameraB.enabled)
-        {
-            movement2d = false;
-            movement3d = true;
-        }
+        if (cameraA.enabled) { movement = MovementType.Movement2D; }
+        if (cameraB.enabled) { movement= MovementType.Movement3D; }
     }
 }

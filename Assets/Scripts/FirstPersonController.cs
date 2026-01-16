@@ -49,7 +49,7 @@ public class FirstPersonController : MonoBehaviour
 
     void Update()
     {
-        if (cameraSwitcherScript.movement3d == true)
+        if (cameraSwitcherScript.movement == MovementType.Movement3D)
         {
             HandleMouseLook();
             HandleMovement();

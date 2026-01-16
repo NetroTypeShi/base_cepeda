@@ -22,7 +22,7 @@ public class movimiento : MonoBehaviour
     {
         input = Vector2.zero;
 
-        if (cameraSwitcherScript.movement2d == true) 
+        if (cameraSwitcherScript.movement == MovementType.Movement2D) 
         {
             if (Input.GetKey(KeyCode.W))
             { 
