@@ -327,7 +327,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!65 &565340677
 BoxCollider:
@@ -1723,7 +1723,8 @@ MonoBehaviour:
   Door: {fileID: 565340675}
   interactionWithKey: 0
   interactionWithDoor: 0
-  playerGotKey: 0
+  doorOpenAngle: 180
+  doorSpeed: 1
 --- !u!1 &1919009212
 GameObject:
   m_ObjectHideFlags: 0
