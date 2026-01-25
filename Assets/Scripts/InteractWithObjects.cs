@@ -5,6 +5,10 @@ public class InteractWithObjects : MonoBehaviour
 {
     [SerializeField] GameObject Key;
     [SerializeField] GameObject Door;
+    Vector3 doorStartPos;
+    Vector3 doorEndPos;
+    Quaternion doorStartRotation;
+    Quaternion doorEndRotation;
 
     public bool interactionWithKey = false;
     public bool interactionWithDoor = false;
@@ -35,8 +39,12 @@ public class InteractWithObjects : MonoBehaviour
     {
         doorOpened = true;
 
-        Quaternion startRotation = Door.transform.rotation;
-        Quaternion endRotation = Quaternion.Euler(
+        // Configurar los valores iniciales y finales para la posición y la rotación
+        doorStartPos = Door.transform.position;
+        doorEndPos = new Vector3(-18.715f, doorStartPos.y, 2.644f); // Cambia estos valores según lo necesites
+
+        doorStartRotation = Door.transform.rotation;
+        doorEndRotation = Quaternion.Euler(
             Door.transform.eulerAngles.x,
             Door.transform.eulerAngles.y + doorOpenAngle,
             Door.transform.eulerAngles.z
@@ -44,10 +52,17 @@ public class InteractWithObjects : MonoBehaviour
 
         float t = 0f;
 
+        // Interpolar posición y rotación simultáneamente
         while (t < 1f)
         {
             t += Time.deltaTime * doorSpeed;
-            Door.transform.rotation = Quaternion.Lerp(startRotation, endRotation, t);
+
+            // Interpolación de posición
+            Door.transform.position = Vector3.Lerp(doorStartPos, doorEndPos, t);
+
+            // Interpolación de rotación
+            Door.transform.rotation = Quaternion.Lerp(doorStartRotation, doorEndRotation, t);
+
             yield return null;
         }
     }
