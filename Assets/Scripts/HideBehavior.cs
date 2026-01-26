@@ -23,7 +23,7 @@ public class HideBehavior : MonoBehaviour
     void Update()
     {
         // ENTRAR A ESCONDERSE
-        if (interactingWithTable && !isHiding && Input.GetKeyDown(KeyCode.E))
+        if (interactingWithTable && !isHiding && Input.GetKeyDown(KeyCode.C))
         {
             isHiding = true;
 
@@ -31,15 +31,15 @@ public class HideBehavior : MonoBehaviour
             defaultPlayerPosition = player.transform.position;
 
             player.transform.localScale = hideScale;
-            player.transform.position = hidePosition.position;
+            //player.transform.position = hidePosition.position;
         }
 
         // SALIR DEL ESCONDITE
-        else if (isHiding && Input.GetKeyDown(KeyCode.E))
+        else if (isHiding && Input.GetKeyDown(KeyCode.C))
         {
             isHiding = false;
 
-            player.transform.position = defaultPlayerPosition;
+            //player.transform.position = defaultPlayerPosition;
             player.transform.localScale = defaultPlayerScale;
         }
 

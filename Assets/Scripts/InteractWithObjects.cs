@@ -14,7 +14,9 @@ public class InteractWithObjects : MonoBehaviour
     public bool interactionWithDoor = false;
 
     bool playerGotKey = false;
-    bool doorOpened = false;
+    bool doorUnlocked = false; // Indica si la puerta está desbloqueada
+    bool doorOpened = false;   // Indica si la puerta está abierta
+    bool isAnimating = false;  // Nuevo: Indica si la puerta está en proceso de animación
 
     [SerializeField] float doorOpenAngle = 90f;
     [SerializeField] float doorSpeed = 2f;
@@ -28,31 +30,60 @@ public class InteractWithObjects : MonoBehaviour
             Destroy(Key);
         }
 
-        if (interactionWithDoor && playerGotKey && Input.GetKeyDown(KeyCode.E) && !doorOpened)
+        // Desbloquear la puerta si el jugador tiene la llave y está frente a la puerta
+        if (interactionWithDoor && playerGotKey && !doorUnlocked && Input.GetKeyDown(KeyCode.E))
         {
-            OpenDoorMessage();
-            StartCoroutine(OpenDoor());
+            UnlockDoorMessage();
+            doorUnlocked = true;
+            playerGotKey = false; // Opcional: la llave se "consume"
+        }
+        // Alternar entre abrir y cerrar la puerta si está desbloqueada y no está animando
+        else if (interactionWithDoor && doorUnlocked && !isAnimating && Input.GetKeyDown(KeyCode.E))
+        {
+            if (doorOpened)
+            {
+                CloseDoorMessage();
+                StartCoroutine(ToggleDoor(false)); // Cerrar la puerta
+            }
+            else
+            {
+                OpenDoorMessage();
+                StartCoroutine(ToggleDoor(true)); // Abrir la puerta
+            }
         }
     }
 
-    IEnumerator OpenDoor()
+    IEnumerator ToggleDoor(bool open)
     {
-        doorOpened = true;
+        isAnimating = true; // Bloquear interacción mientras la puerta se anima
 
         // Configurar los valores iniciales y finales para la posición y la rotación
         doorStartPos = Door.transform.position;
-        doorEndPos = new Vector3(-18.715f, doorStartPos.y, 2.644f); // Cambia estos valores según lo necesites
-
         doorStartRotation = Door.transform.rotation;
-        doorEndRotation = Quaternion.Euler(
-            Door.transform.eulerAngles.x,
-            Door.transform.eulerAngles.y + doorOpenAngle,
-            Door.transform.eulerAngles.z
-        );
+
+        if (open)
+        {
+            // Configurar la posición y rotación para el estado "abierto"
+            doorEndPos = new Vector3(-18.715f, doorStartPos.y, 2.644f); // Cambia estos valores según lo necesites
+            doorEndRotation = Quaternion.Euler(
+                Door.transform.eulerAngles.x,
+                Door.transform.eulerAngles.y + doorOpenAngle,
+                Door.transform.eulerAngles.z
+            );
+        }
+        else
+        {
+            // Configurar la posición y rotación para el estado "cerrado"
+            doorEndPos = new Vector3(-18.06f, doorStartPos.y, 1.834f); // Cambia estos valores según lo necesites
+            doorEndRotation = Quaternion.Euler(
+                Door.transform.eulerAngles.x,
+                Door.transform.eulerAngles.y - doorOpenAngle,
+                Door.transform.eulerAngles.z
+            );
+        }
 
         float t = 0f;
 
-        // Interpolar posición y rotación simultáneamente
         while (t < 1f)
         {
             t += Time.deltaTime * doorSpeed;
@@ -65,6 +96,9 @@ public class InteractWithObjects : MonoBehaviour
 
             yield return null;
         }
+
+        doorOpened = open; // Actualizar el estado de la puerta
+        isAnimating = false; // Permitir interacción nuevamente
     }
 
     void GotKeyMessage()
@@ -72,27 +106,36 @@ public class InteractWithObjects : MonoBehaviour
         print("llave obtenida");
     }
 
+    void UnlockDoorMessage()
+    {
+        print("puerta desbloqueada");
+    }
+
     void OpenDoorMessage()
     {
         print("puerta abierta");
     }
 
+    void CloseDoorMessage()
+    {
+        print("puerta cerrada");
+    }
+
     private void OnTriggerEnter(Collider interactCollider)
     {
-        if (interactCollider.CompareTag("InteractiveObject"))
+        if (interactCollider.CompareTag("Key"))
             interactionWithKey = true;
 
-        if (interactCollider.CompareTag("Door"))
+        if (interactCollider.CompareTag("LockedDoor"))
             interactionWithDoor = true;
     }
 
     private void OnTriggerExit(Collider interactCollider)
     {
-        if (interactCollider.CompareTag("InteractiveObject"))
+        if (interactCollider.CompareTag("Key"))
             interactionWithKey = false;
 
-        if (interactCollider.CompareTag("Door"))
+        if (interactCollider.CompareTag("LockedDoor"))
             interactionWithDoor = false;
     }
 }
-

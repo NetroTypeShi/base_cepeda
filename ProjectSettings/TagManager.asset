@@ -8,6 +8,8 @@ TagManager:
   - InteractCollider
   - Door
   - HideTable
+  - LockedDoor
+  - Key
   layers:
   - Default
   - TransparentFX
