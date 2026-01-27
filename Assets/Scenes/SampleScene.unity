@@ -324,6 +324,7 @@ GameObject:
   - component: {fileID: 565340680}
   - component: {fileID: 565340679}
   - component: {fileID: 565340678}
+  - component: {fileID: 565340681}
   - component: {fileID: 565340677}
   - component: {fileID: 565340676}
   m_Layer: 6
@@ -449,6 +450,23 @@ Transform:
   - {fileID: 1274219645}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &565340681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 565340675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04704498b15e09348952a81b44082a1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  absoluteOpenPosition: {x: -18.715, y: 0, z: 2.644}
+  absoluteClosedPosition: {x: -18.06, y: 0, z: 1.834}
+  lerpRotation: 1
+  openAngle: 90
+  doorSpeed: 1
 --- !u!1001 &569600703
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3096,11 +3114,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Key: {fileID: 2112637028}
-  Door: {fileID: 565340675}
+  Door: {fileID: 565340681}
   interactionWithKey: 0
   interactionWithDoor: 0
-  doorOpenAngle: 90
-  doorSpeed: 1
 --- !u!114 &1829429886
 MonoBehaviour:
   m_ObjectHideFlags: 0
