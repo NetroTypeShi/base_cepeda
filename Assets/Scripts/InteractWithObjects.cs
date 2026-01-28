@@ -3,7 +3,7 @@ using UnityEngine;
 public class InteractWithObjects : MonoBehaviour
 {
     [SerializeField] GameObject Key;
-    [SerializeField] DoorController Door; // referencia al componente DoorController en la puerta
+    [SerializeField] GameObject Door; // Referencia a la puerta (puede ser normal o bloqueada)
 
     public bool interactionWithKey = false;
     public bool interactionWithDoor = false;
@@ -19,27 +19,49 @@ public class InteractWithObjects : MonoBehaviour
             if (Key != null) Destroy(Key);
         }
 
-        // Desbloquear la puerta si el jugador tiene la llave y está frente a la puerta
-        if (interactionWithDoor && playerGotKey && Door != null && !Door.isUnlocked && Input.GetKeyDown(KeyCode.E))
+        if (interactionWithDoor && Input.GetKeyDown(KeyCode.E))
+        {
+            // Verificar si la puerta tiene el componente DoorController (puerta bloqueada)
+            DoorController lockedDoor = Door.GetComponent<DoorController>();
+            if (lockedDoor != null)
+            {
+                HandleLockedDoor(lockedDoor);
+                return;
+            }
+
+            // Verificar si la puerta tiene el componente NormalDoorBehavior (puerta normal)
+            NormalDoorBehavior normalDoor = Door.GetComponent<NormalDoorBehavior>();
+            if (normalDoor != null)
+            {
+                normalDoor.Toggle(); // Alternar entre abrir y cerrar
+                return;
+            }
+        }
+    }
+
+    private void HandleLockedDoor(DoorController lockedDoor)
+    {
+        // Desbloquear la puerta si el jugador tiene la llave
+        if (playerGotKey && !lockedDoor.isUnlocked)
         {
             UnlockDoorMessage();
-            Door.Unlock();
-            playerGotKey = false; // la llave se consume
+            lockedDoor.Unlock();
+            playerGotKey = false; // La llave se consume
             return;
         }
 
         // Alternar entre abrir y cerrar la puerta si está desbloqueada y no está animando
-        if (interactionWithDoor && Door != null && Door.isUnlocked && !Door.isAnimating && Input.GetKeyDown(KeyCode.E))
+        if (lockedDoor.isUnlocked && !lockedDoor.isAnimating)
         {
-            if (Door.isOpen)
+            if (lockedDoor.isOpen)
             {
                 CloseDoorMessage();
-                Door.Close();
+                lockedDoor.Close();
             }
             else
             {
                 OpenDoorMessage();
-                Door.Open();
+                lockedDoor.Open();
             }
         }
     }
@@ -54,8 +76,11 @@ public class InteractWithObjects : MonoBehaviour
         if (interactCollider.CompareTag("Key"))
             interactionWithKey = true;
 
-        if (interactCollider.CompareTag("LockedDoor"))
+        if (interactCollider.CompareTag("LockedDoor") || interactCollider.CompareTag("Door"))
+        {
             interactionWithDoor = true;
+            Door = interactCollider.gameObject; // Actualizar la referencia a la puerta
+        }
     }
 
     private void OnTriggerExit(Collider interactCollider)
@@ -63,7 +88,10 @@ public class InteractWithObjects : MonoBehaviour
         if (interactCollider.CompareTag("Key"))
             interactionWithKey = false;
 
-        if (interactCollider.CompareTag("LockedDoor"))
+        if (interactCollider.CompareTag("LockedDoor") || interactCollider.CompareTag("Door"))
+        {
             interactionWithDoor = false;
+            Door = null; // Limpiar la referencia a la puerta
+        }
     }
 }
