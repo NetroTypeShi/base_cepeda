@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InteractWithObjects : MonoBehaviour
@@ -12,6 +13,7 @@ public class InteractWithObjects : MonoBehaviour
 
     private void Update()
     {
+        print(Door);
         if (interactionWithKey && Input.GetKeyDown(KeyCode.E))
         {
             GotKeyMessage();
@@ -73,13 +75,15 @@ public class InteractWithObjects : MonoBehaviour
 
     private void OnTriggerEnter(Collider interactCollider)
     {
+        Door = interactCollider.gameObject; // Actualizar la referencia a la puerta
         if (interactCollider.CompareTag("Key"))
             interactionWithKey = true;
 
         if (interactCollider.CompareTag("LockedDoor") || interactCollider.CompareTag("Door"))
         {
             interactionWithDoor = true;
-            Door = interactCollider.gameObject; // Actualizar la referencia a la puerta
+            
+            
         }
     }
 
@@ -90,8 +94,10 @@ public class InteractWithObjects : MonoBehaviour
 
         if (interactCollider.CompareTag("LockedDoor") || interactCollider.CompareTag("Door"))
         {
+            print("B");
+            
             interactionWithDoor = false;
-            Door = null; // Limpiar la referencia a la puerta
+            
         }
     }
 }
