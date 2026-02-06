@@ -10,6 +10,7 @@ TagManager:
   - HideTable
   - LockedDoor
   - Key
+  - CodeDoor
   layers:
   - Default
   - TransparentFX

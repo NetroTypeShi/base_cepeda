@@ -5,15 +5,20 @@ public class InteractWithObjects : MonoBehaviour
 {
     [SerializeField] GameObject Key;
     [SerializeField] GameObject Door; // Referencia a la puerta (puede ser normal o bloqueada)
-
+    [SerializeField] GameObject Keypad;
+    [SerializeField] Canvas CodeCanvas;
+    FirstPersonController firstPersonController;
     public bool interactionWithKey = false;
     public bool interactionWithDoor = false;
 
     bool playerGotKey = false;
-
+    public void Start()
+    {
+        CodeCanvas.enabled = false;
+    }
     private void Update()
     {
-        print(Door);
+       //print(Door);
         if (interactionWithKey && Input.GetKeyDown(KeyCode.E))
         {
             GotKeyMessage();
@@ -24,8 +29,15 @@ public class InteractWithObjects : MonoBehaviour
         if (interactionWithDoor && Input.GetKeyDown(KeyCode.E))
         {
             // Verificar si la puerta tiene el componente DoorController (puerta bloqueada)
+            CodeDoorBehavior codeDoor = Door.GetComponent<CodeDoorBehavior>();
+            if (codeDoor)
+            {
+               HandleCodeDoor(codeDoor);
+                return;
+            }
+
             DoorController lockedDoor = Door.GetComponent<DoorController>();
-            if (lockedDoor != null)
+            if (lockedDoor)
             {
                 HandleLockedDoor(lockedDoor);
                 return;
@@ -40,7 +52,12 @@ public class InteractWithObjects : MonoBehaviour
             }
         }
     }
-
+    private void HandleCodeDoor(CodeDoorBehavior codeDoor)
+    {
+        CodeCanvas.enabled = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
     private void HandleLockedDoor(DoorController lockedDoor)
     {
         // Desbloquear la puerta si el jugador tiene la llave
@@ -79,11 +96,9 @@ public class InteractWithObjects : MonoBehaviour
         if (interactCollider.CompareTag("Key"))
             interactionWithKey = true;
 
-        if (interactCollider.CompareTag("LockedDoor") || interactCollider.CompareTag("Door"))
+        if (interactCollider.CompareTag("LockedDoor") || interactCollider.CompareTag("Door")|| interactCollider.CompareTag("CodeDoor"))
         {
-            interactionWithDoor = true;
-            
-            
+            interactionWithDoor = true;         
         }
     }
 
@@ -92,7 +107,7 @@ public class InteractWithObjects : MonoBehaviour
         if (interactCollider.CompareTag("Key"))
             interactionWithKey = false;
 
-        if (interactCollider.CompareTag("LockedDoor") || interactCollider.CompareTag("Door"))
+        if (interactCollider.CompareTag("LockedDoor") || interactCollider.CompareTag("Door") || interactCollider.CompareTag("CodeDoor"))
         {
             print("B");
             

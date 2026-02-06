@@ -1,7 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class NormalDoorBehavior : MonoBehaviour
+public class CodeDoorBehavior : MonoBehaviour
 {
     [Tooltip("Posición absoluta para puerta abierta (X/Z usados). Y se sustituye por la Y inicial de la puerta.")]
     [SerializeField] Vector3 absoluteOpenPosition = new Vector3(-18.715f, 0f, 2.644f);
@@ -12,8 +13,13 @@ public class NormalDoorBehavior : MonoBehaviour
     [Tooltip("Si true, interpola también la rotación (añade openAngle a la rotación inicial en Y).")]
     [SerializeField] bool lerpRotation = true;
     [SerializeField] float openAngle = 90f;
-    //investigar sobre planarios
+
     [SerializeField] float doorSpeed = 2f;
+
+
+    [Tooltip("El Keypad Aquí")]
+    [SerializeField] GameObject KeyPad;
+    KeyPad keypad;
 
     Vector3 openPos;
     Vector3 closedPos;
@@ -22,10 +28,10 @@ public class NormalDoorBehavior : MonoBehaviour
 
     public bool isOpen { get; private set; } = false;
     public bool isAnimating { get; private set; } = false;
-
+    // Start is called before the first frame update
     void Start()
     {
-        
+        keypad = KeyPad.GetComponent<KeyPad>();
         var startPos = transform.position;
         closedPos = new Vector3(absoluteClosedPosition.x, startPos.y, absoluteClosedPosition.z);
         openPos = new Vector3(absoluteOpenPosition.x, startPos.y, absoluteOpenPosition.z);
@@ -36,8 +42,12 @@ public class NormalDoorBehavior : MonoBehaviour
 
     public void Toggle()
     {
+
+        if (keypad.openTheDoor)
+        {
             if (isAnimating) return;
             StartCoroutine(ToggleDoor(!isOpen));
+        }
     }
 
     public void Open()
