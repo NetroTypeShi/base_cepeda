@@ -7,6 +7,7 @@ public class InteractWithObjects : MonoBehaviour
     [SerializeField] GameObject Door; // Referencia a la puerta (puede ser normal o bloqueada)
     [SerializeField] GameObject Keypad;
     [SerializeField] Canvas CodeCanvas;
+    KeyPad keyPadScript;
     FirstPersonController firstPersonController;
     public bool interactionWithKey = false;
     public bool interactionWithDoor = false;
@@ -14,6 +15,8 @@ public class InteractWithObjects : MonoBehaviour
     bool playerGotKey = false;
     public void Start()
     {
+        keyPadScript = Keypad.GetComponent<KeyPad>();
+        firstPersonController = GetComponent<FirstPersonController>();
         CodeCanvas.enabled = false;
     }
     private void Update()
@@ -54,9 +57,12 @@ public class InteractWithObjects : MonoBehaviour
     }
     private void HandleCodeDoor(CodeDoorBehavior codeDoor)
     {
-        CodeCanvas.enabled = true;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        if(keyPadScript.openTheDoor == false)
+        {
+            CodeCanvas.enabled = true;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
     private void HandleLockedDoor(DoorController lockedDoor)
     {

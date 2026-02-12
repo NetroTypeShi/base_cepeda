@@ -45,6 +45,8 @@ public class CodeDoorBehavior : MonoBehaviour
 
         if (keypad.openTheDoor)
         {
+            KeyPad.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
             if (isAnimating) return;
             StartCoroutine(ToggleDoor(!isOpen));
         }
